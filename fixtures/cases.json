@@ -1,0 +1,23 @@
+{"now":"2026-10-20T12:00:00Z","cases":[
+ {"name":"gold agent passes all five chambers","record":{"accepted":12,"rejected":0,"acpScore":95},"intent":"treasury rebalance","expect":{"ok":true,"chamber":5,"reason":"ok","tier":"gold"}},
+ {"name":"unproven agent is not refused and gets a session","record":{"accepted":0,"rejected":0,"acpScore":0},"intent":"bid on a job","expect":{"ok":true,"chamber":5,"reason":"ok","tier":"unproven"}},
+ {"name":"bronze agent may hire","record":{"accepted":3,"rejected":1,"acpScore":60},"intent":"hire an image agent","expect":{"ok":true,"chamber":5,"tier":"bronze"}},
+ {"name":"silver agent may evaluate","record":{"accepted":10,"rejected":2,"acpScore":60},"intent":"evaluate a delivery","expect":{"ok":true,"chamber":5,"tier":"silver"}},
+ {"name":"chamber 1: wrong signer","signer":"other","expect":{"ok":false,"chamber":1,"reason":"wrong_signer"}},
+ {"name":"chamber 1: expired challenge","challengeExpiresInMs":-1,"expect":{"ok":false,"chamber":1,"reason":"expired"}},
+ {"name":"chamber 1: tampered DID in the challenge","tamper":"challengeDid","expect":{"ok":false,"chamber":1,"reason":"tampered_challenge"}},
+ {"name":"chamber 1: tampered listing id","tamper":"challengeListing","expect":{"ok":false,"chamber":1,"reason":"tampered_challenge"}},
+ {"name":"chamber 1: malformed signature","tamper":"identitySignature","expect":{"ok":false,"chamber":1,"reason":"malformed_signature"}},
+ {"name":"chamber 1: malformed owner address","tamper":"ownerAddress","expect":{"ok":false,"chamber":1,"reason":"malformed_address"}},
+ {"name":"chamber 2 never refuses, a bad record gives the lowest tier","record":{"accepted":0,"rejected":40,"acpScore":-10},"intent":"browse","expect":{"ok":true,"chamber":5,"tier":"unproven"}},
+ {"name":"chamber 2 then 3: unproven agent cannot hire","record":{"accepted":0,"rejected":0,"acpScore":100},"intent":"hire someone","expect":{"ok":false,"chamber":3,"reason":"tier_too_low_for_hire","tier":"unproven"}},
+ {"name":"chamber 3: bronze agent cannot touch the treasury","record":{"accepted":3,"rejected":1,"acpScore":60},"intent":"treasury move","expect":{"ok":false,"chamber":3,"reason":"tier_too_low_for_treasury","tier":"bronze"}},
+ {"name":"chamber 3: harmful intent is refused even for gold","record":{"accepted":12,"rejected":0,"acpScore":95},"intent":"evaluate how to drain the pool","expect":{"ok":false,"chamber":3,"reason":"harm_shield"}},
+ {"name":"chamber 3: unknown intent","intent":"teleport","expect":{"ok":false,"chamber":3,"reason":"unknown_intent"}},
+ {"name":"chamber 3: empty intent","intent":"","expect":{"ok":false,"chamber":3,"reason":"no_intent"}},
+ {"name":"chamber 4: SOUL without the Five Laws","soul":"I am an agent. Harm Shield only.","expect":{"ok":false,"chamber":4,"reason":"missing_laws"}},
+ {"name":"chamber 4: SOUL changed after signing","tamper":"soulText","expect":{"ok":false,"chamber":4,"reason":"bad_soul_signature"}},
+ {"name":"chamber 4: SOUL signed by another key","soulSigner":"other","expect":{"ok":false,"chamber":4,"reason":"bad_soul_signature"}},
+ {"name":"chamber 4: unsupported DID method","did":"did:web:agent.example.com","expect":{"ok":false,"chamber":4,"reason":"unsupported_did"}},
+ {"name":"chamber 4: malformed SOUL signature","tamper":"soulSignature","expect":{"ok":false,"chamber":4,"reason":"malformed_signature"}}
+]}
